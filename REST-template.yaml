@@ -1,0 +1,221 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  aws-rest-to-http-api-migration
+
+  SAM Template describing the way to implement a basic serverless service using a REST API
+
+Parameters:
+  DynamoDBTableName:
+    Type: String
+    Default: rest-item-table
+  S3BucketName:
+    Type: String
+    Default: rest-example-bucket
+
+Globals:
+  Function:
+    Runtime: nodejs12.x
+    Tracing: Active
+    Timeout: 3
+  Api:
+    Cors:
+      AllowMethods: "'DELETE,GET,POST,PUT'"
+      AllowHeaders: "'Tenant-Id,Authorization,Content-Type'"
+      AllowOrigin: "'*'"
+
+Resources:
+  RESTApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      TracingEnabled: true
+      StageName: dev
+      DefinitionBody:
+        'Fn::Transform':
+          Name: AWS::Include
+          Parameters:
+            Location: !Join [ '', [ 's3://', !Ref S3BucketName, '/example-openapi-spec.yaml' ] ]
+
+  RESTBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketName: !Ref S3BucketName
+
+  RESTAddItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/REST/add-item/
+      Handler: app.lambdaHandler
+      Role: !GetAtt RESTAddItemRole.Arn
+      Environment:
+        Variables:
+          TableName: !Ref RESTItemTable
+
+  RESTAddItemRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: RESTAddItemPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                Resource: !GetAtt RESTItemTable.Arn
+              - Effect: Allow
+                Action:
+                  - xray:PutTelemetryRecords
+                  - xray:PutTraceSegments
+                Resource: '*'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSLambdaExecute
+
+  RESTGetItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/REST/get-item/
+      Handler: app.lambdaHandler
+      Role: !GetAtt RESTGetItemRole.Arn
+      Environment:
+        Variables:
+          TableName: !Ref RESTItemTable
+
+  RESTGetItemRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: RESTGetItemPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                Resource: !GetAtt RESTItemTable.Arn
+              - Effect: Allow
+                Action:
+                  - xray:PutTelemetryRecords
+                  - xray:PutTraceSegments
+                Resource: '*'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSLambdaExecute
+
+  RESTUpdateItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/REST/update-item/
+      Handler: app.lambdaHandler
+      Role: !GetAtt RESTUpdateItemRole.Arn
+      Environment:
+        Variables:
+          TableName: !Ref RESTItemTable
+
+  RESTUpdateItemRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: RESTUpdateItemPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                Resource: !GetAtt RESTItemTable.Arn
+              - Effect: Allow
+                Action:
+                  - xray:PutTelemetryRecords
+                  - xray:PutTraceSegments
+                Resource: '*'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSLambdaExecute
+
+  RESTDeleteItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/REST/delete-item/
+      Handler: app.lambdaHandler
+      Role: !GetAtt RESTDeleteItemRole.Arn
+      Environment:
+        Variables:
+          TableName: !Ref RESTItemTable
+
+  RESTDeleteItemRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: RESTDeleteItemPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:DeleteItem
+                Resource: !GetAtt RESTItemTable.Arn
+              - Effect: Allow
+                Action:
+                  - xray:PutTelemetryRecords
+                  - xray:PutTraceSegments
+                Resource: '*'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSLambdaExecute
+
+  RESTItemTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DynamoDBTableName
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5

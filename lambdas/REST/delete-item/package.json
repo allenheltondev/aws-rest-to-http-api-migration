@@ -1,0 +1,15 @@
+{
+  "name": "delete-item",
+  "version": "1.0.0",
+  "description": "Deletes an item with the specified id",
+  "main": "app.js",
+  "author": "allenheltondev",
+  "license": "MIT",
+  "dependencies": {
+    "http-status-codes": "^1.4.0"
+  },
+  "scripts": {},
+  "devDependencies": {
+    "aws-sdk": "^2.543.0"
+  }
+}

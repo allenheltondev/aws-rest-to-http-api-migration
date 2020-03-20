@@ -1,0 +1,172 @@
+openapi: 3.0.0
+info:
+  title: Example
+  description: Adds, Updates, Reads, and Deletes items
+  version: 1.0.0
+tags:
+- name: Items
+  description: |
+    Operations to manage maintenance of items.
+x-amazon-apigateway-request-validators:
+  Validate All:
+    validateRequestParameters: true
+    validateRequestBody: true
+x-amazon-apigateway-gateway-responses:
+  BAD_REQUEST_BODY:
+    statusCode: 400
+    responseTemplates:
+      application/json: '{ "message": "$context.error.validationErrorString" }'
+
+paths:
+  /items:
+    post:
+      summary: Add a new item
+      description: Create a new item with any details you like. This will return an id
+      tags:
+        - Items
+      responses:
+        201:
+          $ref: '#/components/responses/Created'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemModel'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RESTAddItemFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+
+  /items/{itemId}:
+    parameters:
+      - $ref: '#/components/parameters/itemId'
+    get:
+      summary: Get Item details
+      description: Returns all the details for an item with the provided id
+      tags:
+        - Items
+      responses:
+        200:
+          description: The request succeeded and the item is included in the response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemModel'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RESTGetItemFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+
+    put:
+      summary: Update an existing item
+      description: Replaces all details for an existing item with the data passed in the request body
+      tags:
+        - Items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemModel'
+      responses:
+        204:
+          $ref: '#/components/responses/NoContentUpdate'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RESTUpdateItemFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+
+    delete:
+      summary: Delete an existing item
+      description: Deletes an existing item from the system. This call is idempotent
+      tags:
+        - Items
+      responses:
+        204:
+          $ref: '#/components/responses/NoContentDelete'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RESTDeleteItemFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+
+components:
+  parameters:
+    itemId:
+      name: itemId
+      in: path
+      description: Identifier for an item
+      required: true
+      example: 09sl3415098gplmn
+      schema:
+        type: string
+
+  schemas:
+    ItemModel:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        comment:
+          type: string
+
+  responses:
+    Created: #201
+      description: The request succeeded and created a new item
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+            required:
+              - id
+    NoContentUpdate: #204
+      description: The request succeeded and updated an existing item
+    NoContentDelete: #204
+      description: The request finished processing and the item was removed or did not exist
+    NotFound: #404
+      description: The requested item was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Could not find an item with the specified id.
+            required:
+              - message
+
+    InternalServerError: #500
+      description: The server encountered an unexpected condition which prevented it from fulfilling the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: An error occurred saving the item.
+            required:
+              - message

@@ -1,0 +1,14 @@
+{
+  "name": "aws-rest-to-http-api-migration",
+  "version": "1.0.0",
+  "description": "This is an example application that uses OAS3.0 to define an API. The purpose is to provide an example of how to move from REST API to HTTP API in AWS",
+  "devDependencies": {
+    "aws-sdk": "^2.543.0",
+    "eslint": "^6.6.0",
+    "eslint-config-google": "^0.14.0"
+  },
+  "scripts": {
+    "deploy-rest": "sam build &&  sam package --output-template-file packaged.yaml --s3-bucket REPLACE_ME && sam deploy --template-file packaged.yaml --stack-name REST-API-Stack --capabilities CAPABILITY_IAM"
+  },
+  "license": "MIT"
+}
