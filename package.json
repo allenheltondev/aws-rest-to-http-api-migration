@@ -8,7 +8,8 @@
     "eslint-config-google": "^0.14.0"
   },
   "scripts": {
-    "deploy-rest": "sam build &&  sam package --output-template-file packaged.yaml --s3-bucket REPLACE_ME && sam deploy --template-file packaged.yaml --stack-name REST-API-Stack --capabilities CAPABILITY_IAM"
+    "provision-buckets": "aws s3 mb REPLACEME",
+    "deploy-rest": "aws s3api put-object --bucket REPLACEME --key example-openapi-spec.yaml --body ./example-openapi-spec.yaml && sam build -t REST-template.yaml && sam package --output-template-file REST-packaged.yaml --s3-bucket REPLACEMETOO && sam deploy --template-file REST-packaged.yaml --stack-name REST-API-Stack --capabilities CAPABILITY_IAM"
   },
   "license": "MIT"
 }

@@ -1,4 +1,6 @@
 const httpStatusCode = require('http-status-codes');
+const dynamodb = require('aws-sdk/clients/dynamodb');
+const documentClient = new dynamodb.DocumentClient();
 const NotFoundErrorMessage = 'Could not find an item with the specified id.';
 const UnhandledExceptionErrorMessage = 'An error occurred saving the item.';
 

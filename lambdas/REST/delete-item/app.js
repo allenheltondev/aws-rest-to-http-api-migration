@@ -1,4 +1,6 @@
 const httpStatusCode = require('http-status-codes');
+const dynamodb = require('aws-sdk/clients/dynamodb');
+const documentClient = new dynamodb.DocumentClient();
 
 exports.lambdaHandler = async (event, context) => {
   const id = event.pathParameters.itemId;

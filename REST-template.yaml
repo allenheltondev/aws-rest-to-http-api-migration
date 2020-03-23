@@ -25,6 +25,7 @@ Globals:
       AllowOrigin: "'*'"
 
 Resources:
+
   RESTApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -36,19 +37,6 @@ Resources:
           Parameters:
             Location: !Join [ '', [ 's3://', !Ref S3BucketName, '/example-openapi-spec.yaml' ] ]
 
-  RESTBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      VersioningConfiguration:
-        Status: Enabled
-      AccessControl: Private
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      BucketName: !Ref S3BucketName
-
   RESTAddItemFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -58,6 +46,13 @@ Resources:
       Environment:
         Variables:
           TableName: !Ref RESTItemTable
+      Events:
+        AddItemEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RESTApi
+            Path: /items
+            Method: POST
 
   RESTAddItemRole:
     Type: AWS::IAM::Role
@@ -97,6 +92,13 @@ Resources:
       Environment:
         Variables:
           TableName: !Ref RESTItemTable
+      Events:
+        GetItemEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RESTApi
+            Path: /items/{itemId}
+            Method: GET
 
   RESTGetItemRole:
     Type: AWS::IAM::Role
@@ -136,6 +138,13 @@ Resources:
       Environment:
         Variables:
           TableName: !Ref RESTItemTable
+      Events:
+        UpdateItemEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RESTApi
+            Path: /items/{itemId}
+            Method: PUT
 
   RESTUpdateItemRole:
     Type: AWS::IAM::Role
@@ -175,6 +184,13 @@ Resources:
       Environment:
         Variables:
           TableName: !Ref RESTItemTable
+      Events:
+        DeleteItemEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RESTApi
+            Path: /items/{itemId}
+            Method: DELETE
 
   RESTDeleteItemRole:
     Type: AWS::IAM::Role

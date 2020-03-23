@@ -1,6 +1,8 @@
 const httpStatusCode = require('http-status-codes');
 const short = require('short-uuid');
 const ErrorMessage = 'An error occurred saving the item.';
+const dynamodb = require('aws-sdk/clients/dynamodb');
+const documentClient = new dynamodb.DocumentClient();
 
 exports.lambdaHandler = async (event, context) => {
   const item = JSON.parse(event.body);
