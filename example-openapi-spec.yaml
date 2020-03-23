@@ -38,7 +38,7 @@ paths:
       x-amazon-apigateway-request-validator: Validate All
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RESTAddItemFunction.Arn}/invocations
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AddItemFunction.Arn}/invocations
         httpMethod: POST
         type: aws_proxy
 
@@ -64,7 +64,7 @@ paths:
       x-amazon-apigateway-request-validator: Validate All
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RESTGetItemFunction.Arn}/invocations
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetItemFunction.Arn}/invocations
         httpMethod: POST
         type: aws_proxy
 
@@ -88,7 +88,7 @@ paths:
       x-amazon-apigateway-request-validator: Validate All
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RESTUpdateItemFunction.Arn}/invocations
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateItemFunction.Arn}/invocations
         httpMethod: POST
         type: aws_proxy
 
@@ -103,7 +103,7 @@ paths:
       x-amazon-apigateway-request-validator: Validate All
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RESTDeleteItemFunction.Arn}/invocations
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DeleteItemFunction.Arn}/invocations
         httpMethod: POST
         type: aws_proxy
 

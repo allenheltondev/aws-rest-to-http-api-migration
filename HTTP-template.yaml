@@ -3,33 +3,26 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   aws-rest-to-http-api-migration
 
-  SAM Template describing the way to implement a basic serverless service using a REST API
+  SAM Template describing the way to implement a basic serverless service using an HTTP API
 
 Parameters:
   DynamoDBTableName:
     Type: String
-    Default: rest-item-table
+    Default: http-item-table
   S3BucketName:
     Type: String
-    Default: rest-example-bucket
+    Default: http-example-bucket
 
 Globals:
   Function:
     Runtime: nodejs12.x
     Tracing: Active
     Timeout: 3
-  Api:
-    Cors:
-      AllowMethods: "'DELETE,GET,POST,PUT'"
-      AllowHeaders: "'Tenant-Id,Authorization,Content-Type'"
-      AllowOrigin: "'*'"
 
 Resources:
-
-  RESTApi:
-    Type: AWS::Serverless::Api
+  HTTPApi:
+    Type: AWS::Serverless::HttpApi
     Properties:
-      TracingEnabled: true
       StageName: dev
       DefinitionBody:
         'Fn::Transform':
@@ -40,17 +33,16 @@ Resources:
   AddItemFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: lambdas/REST/add-item/
+      CodeUri: lambdas/HTTP/add-item/
       Handler: app.lambdaHandler
       Role: !GetAtt AddItemRole.Arn
       Environment:
         Variables:
-          TableName: !Ref RESTItemTable
+          TableName: !Ref ItemTable
       Events:
         AddItemEvent:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref RESTApi
             Path: /items
             Method: POST
 
@@ -67,14 +59,14 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: RESTAddItemPolicy
+        - PolicyName: AddItemPolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
                   - dynamodb:PutItem
-                Resource: !GetAtt RESTItemTable.Arn
+                Resource: !GetAtt ItemTable.Arn
               - Effect: Allow
                 Action:
                   - xray:PutTelemetryRecords
@@ -86,17 +78,16 @@ Resources:
   GetItemFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: lambdas/REST/get-item/
+      CodeUri: lambdas/HTTP/get-item/
       Handler: app.lambdaHandler
       Role: !GetAtt GetItemRole.Arn
       Environment:
         Variables:
-          TableName: !Ref RESTItemTable
+          TableName: !Ref ItemTable
       Events:
         GetItemEvent:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref RESTApi
             Path: /items/{itemId}
             Method: GET
 
@@ -113,14 +104,14 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: RESTGetItemPolicy
+        - PolicyName: GetItemPolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
                   - dynamodb:GetItem
-                Resource: !GetAtt RESTItemTable.Arn
+                Resource: !GetAtt ItemTable.Arn
               - Effect: Allow
                 Action:
                   - xray:PutTelemetryRecords
@@ -132,17 +123,16 @@ Resources:
   UpdateItemFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: lambdas/REST/update-item/
+      CodeUri: lambdas/HTTP/update-item/
       Handler: app.lambdaHandler
       Role: !GetAtt UpdateItemRole.Arn
       Environment:
         Variables:
-          TableName: !Ref RESTItemTable
+          TableName: !Ref ItemTable
       Events:
         UpdateItemEvent:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref RESTApi
             Path: /items/{itemId}
             Method: PUT
 
@@ -159,14 +149,14 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: RESTUpdateItemPolicy
+        - PolicyName: UpdateItemPolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
                   - dynamodb:PutItem
-                Resource: !GetAtt RESTItemTable.Arn
+                Resource: !GetAtt ItemTable.Arn
               - Effect: Allow
                 Action:
                   - xray:PutTelemetryRecords
@@ -178,17 +168,16 @@ Resources:
   DeleteItemFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: lambdas/REST/delete-item/
+      CodeUri: lambdas/HTTP/delete-item/
       Handler: app.lambdaHandler
       Role: !GetAtt DeleteItemRole.Arn
       Environment:
         Variables:
-          TableName: !Ref RESTItemTable
+          TableName: !Ref ItemTable
       Events:
         DeleteItemEvent:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref RESTApi
             Path: /items/{itemId}
             Method: DELETE
 
@@ -205,14 +194,14 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: RESTDeleteItemPolicy
+        - PolicyName: DeleteItemPolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
                   - dynamodb:DeleteItem
-                Resource: !GetAtt RESTItemTable.Arn
+                Resource: !GetAtt ItemTable.Arn
               - Effect: Allow
                 Action:
                   - xray:PutTelemetryRecords
@@ -221,7 +210,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AWSLambdaExecute
 
-  RESTItemTable:
+  ItemTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Ref DynamoDBTableName
