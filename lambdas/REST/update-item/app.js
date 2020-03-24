@@ -17,8 +17,8 @@ exports.lambdaHandler = async (event, context) => {
       headers: { 'Access-Control-Allow-Origin': '*' }
     };
     if(result.error === 'ConditionalCheckFailedException'){
-      response.body = JSON.stringify({message: NotFoundErrorMessage});
       response.statusCode = httpStatusCode.NOT_FOUND;
+      response.body = JSON.stringify({message: NotFoundErrorMessage});
     }
 
     return response;

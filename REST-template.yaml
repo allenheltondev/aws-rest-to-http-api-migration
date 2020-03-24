@@ -11,7 +11,7 @@ Parameters:
     Default: rest-item-table
   S3BucketName:
     Type: String
-    Default: rest-example-bucket
+    Default: rest-to-http-example-bucket
 
 Globals:
   Function:
@@ -21,7 +21,7 @@ Globals:
   Api:
     Cors:
       AllowMethods: "'DELETE,GET,POST,PUT'"
-      AllowHeaders: "'Tenant-Id,Authorization,Content-Type'"
+      AllowHeaders: "'Authorization,Content-Type'"
       AllowOrigin: "'*'"
 
 Resources:

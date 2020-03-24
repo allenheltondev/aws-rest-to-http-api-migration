@@ -1,4 +1,5 @@
 const short = require('short-uuid');
+const httpStatusCode = require('http-status-codes');
 const ErrorMessage = 'An error occurred saving the item.';
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const documentClient = new dynamodb.DocumentClient();
@@ -8,7 +9,10 @@ exports.lambdaHandler = async (event, context) => {
 
   const id = await saveToDynamo(item);
   if (!id) {
-    return { message: ErrorMessage };
+    return {
+      statusCode: httpStatusCode.INTERNAL_SERVER_ERROR,
+      body: { message: ErrorMessage }
+    };
   }
   else {
     return { id: id };

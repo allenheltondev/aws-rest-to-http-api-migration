@@ -5,7 +5,9 @@
   "main": "app.js",
   "author": "allenheltondev",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "http-status-codes": "^1.4.0"
+  },
   "scripts": {},
   "devDependencies": {
     "aws-sdk": "^2.543.0"

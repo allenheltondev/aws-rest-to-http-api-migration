@@ -1,3 +1,4 @@
+const httpStatusCode = require('http-status-codes');
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const documentClient = new dynamodb.DocumentClient();
 const ErrorMessage = 'Could not find an item with the specified id.';
@@ -7,7 +8,10 @@ exports.lambdaHandler = async (event, context) => {
   const item = await getItemFromDynamo(id);
 
   if (!item) {
-    return { message: ErrorMessage };
+    return {
+      statusCode: httpStatusCode.NOT_FOUND,
+      body: { message: ErrorMessage }
+    };
   }
   else {
     item.id = item.pk;

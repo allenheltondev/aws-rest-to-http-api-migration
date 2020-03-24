@@ -1,3 +1,4 @@
+const httpStatusCode = require('http-status-codes');
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const documentClient = new dynamodb.DocumentClient();
 const NotFoundErrorMessage = 'Could not find an item with the specified id.';
@@ -10,9 +11,16 @@ exports.lambdaHandler = async (event, context) => {
 
   const result = await updateItemInDynamo(item);
   if (!result.success) {
-    message = result.error === 'ConditionalCheckFailedException' ? NotFoundErrorMessage : UnhandledExceptionErrorMessage;
+    let response = {
+      statusCode: httpStatusCode.INTERNAL_SERVER_ERROR,
+      body: { message: UnhandledExceptionErrorMessage },
+    };
+    if (result.error === 'ConditionalCheckFailedException') {
+      response.statusCode = httpStatusCode.NOT_FOUND;
+      response.body = { message: NotFoundErrorMessage };
+    }
 
-    return { message: message };
+    return response;
   }
   else {
     return {};

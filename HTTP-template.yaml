@@ -11,7 +11,7 @@ Parameters:
     Default: http-item-table
   S3BucketName:
     Type: String
-    Default: http-example-bucket
+    Default: rest-to-http-example-bucket
 
 Globals:
   Function:
@@ -43,6 +43,7 @@ Resources:
         AddItemEvent:
           Type: HttpApi
           Properties:
+            ApiId: !Ref HTTPApi
             Path: /items
             Method: POST
 
@@ -88,6 +89,7 @@ Resources:
         GetItemEvent:
           Type: HttpApi
           Properties:
+            ApiId: !Ref HTTPApi
             Path: /items/{itemId}
             Method: GET
 
@@ -133,6 +135,7 @@ Resources:
         UpdateItemEvent:
           Type: HttpApi
           Properties:
+            ApiId: !Ref HTTPApi
             Path: /items/{itemId}
             Method: PUT
 
@@ -178,6 +181,7 @@ Resources:
         DeleteItemEvent:
           Type: HttpApi
           Properties:
+            ApiId: !Ref HTTPApi
             Path: /items/{itemId}
             Method: DELETE
 
