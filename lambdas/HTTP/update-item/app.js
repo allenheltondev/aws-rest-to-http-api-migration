@@ -1,12 +1,19 @@
 const httpStatusCode = require('http-status-codes');
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const documentClient = new dynamodb.DocumentClient();
+const BadRequest = 'Name is a required field';
 const NotFoundErrorMessage = 'Could not find an item with the specified id.';
 const UnhandledExceptionErrorMessage = 'An error occurred saving the item.';
 
 exports.lambdaHandler = async (event, context) => {
   const id = event.pathParameters.itemId;
   const item = JSON.parse(event.body);
+  if (!item.name) {
+    return {
+      statusCode: httpStatusCode.BAD_REQUEST,
+      body: { message: BadRequest }
+    };
+  }
   item.pk = id;
 
   const result = await updateItemInDynamo(item);

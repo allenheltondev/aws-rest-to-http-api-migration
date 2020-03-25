@@ -1,11 +1,19 @@
 const short = require('short-uuid');
 const httpStatusCode = require('http-status-codes');
 const ErrorMessage = 'An error occurred saving the item.';
+const BadRequest = 'Name is a required field';
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const documentClient = new dynamodb.DocumentClient();
 
 exports.lambdaHandler = async (event, context) => {
   const item = JSON.parse(event.body);
+
+  if (!item.name) {
+    return {
+      statusCode: httpStatusCode.BAD_REQUEST,
+      body: { message: BadRequest }
+    };
+  }
 
   const id = await saveToDynamo(item);
   if (!id) {

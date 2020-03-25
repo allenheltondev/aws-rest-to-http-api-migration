@@ -7,15 +7,6 @@ tags:
 - name: Items
   description: |
     Operations to manage maintenance of items.
-x-amazon-apigateway-request-validators:
-  Validate All:
-    validateRequestParameters: true
-    validateRequestBody: true
-x-amazon-apigateway-gateway-responses:
-  BAD_REQUEST_BODY:
-    statusCode: 400
-    responseTemplates:
-      application/json: '{ "message": "$context.error.validationErrorString" }'
 x-amazon-apigateway-cors:
   allowOrigins:
     - '*'
