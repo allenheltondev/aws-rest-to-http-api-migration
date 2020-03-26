@@ -42,10 +42,12 @@ npm run deploy-http
 If you are able to contribute back, I'd appreciate help on parameterizing the package.json to use a config object so users don't have to replace REPLACEME in so many places. I'd like to use a configuration variable in the scripts like `$npm_package_config_bucketname`, but I have been unsuccessful on my Windows machine in getting that to resolve.
 
 ## Contact ##
-[![alt text][1.1]][1] [![alt text][2.1]][2]
+[![Twitter][1.1]][1] [![GitHub][2.1]][2] [![LinkedIn][2.1]][2]
 
 [1.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
-[2.1]: http://i.imgur.com/0o48UoR.png (github icon with padding)
+[2.1]: http://i.imgur.com/0o48UoR.png
+[3.1]: https://imgur.com/jtf0ESR
 
 [1]: http://www.twitter.com/allenheltondev
 [2]: http://www.github.com/allenheltondev
+[3]: https://www.linkedin.com/in/allen-helton-85aa9650/
