@@ -1,4 +1,4 @@
-[![Twitter][1.1]][1] [![GitHub][2.1]][2] [![LinkedIn][3.1]][3]
+[![Twitter][1.1]][1] [![GitHub][2.1]][2] [![LinkedIn][3.1]][3] [![Medium][4.1]][4]
 # AWS REST to HTTP API Migration Example #
 ## Description ##
 This example is built to demonstrate how to take your existing REST APIs and move them over to HTTP. It illustrates the differences between the implementation of both kinds of APIs. For a detailed walkthrough, reference the [article on Medium](https://medium.com/better-programming/how-to-migrate-your-rest-api-to-the-new-http-api-in-aws-2e986c326ce0).
@@ -45,7 +45,9 @@ If you are able to contribute back, I'd appreciate help on parameterizing the pa
 [1.1]: http://i.imgur.com/tXSoThF.png
 [2.1]: http://i.imgur.com/0o48UoR.png
 [3.1]: http://i.imgur.com/lGwB1Hk.png
+[4.1]: http://i.imgur.com/uVWgCtA.png
 
 [1]: http://www.twitter.com/allenheltondev
 [2]: http://www.github.com/allenheltondev
 [3]: https://www.linkedin.com/in/allen-helton-85aa9650/
+[4]: https://medium.com/@allen.helton
