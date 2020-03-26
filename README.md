@@ -1,4 +1,4 @@
-# AWS REST to HTTP API Migration Example#
+# AWS REST to HTTP API Migration Example #
 ## Description ##
 This example is built to demonstrate how to take your existing REST APIs and move them over to HTTP. It illustrates the differences between the implementation of both kinds of APIs. For a detailed walkthrough, reference the article on Medium.
 
