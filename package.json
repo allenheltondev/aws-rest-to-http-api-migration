@@ -8,9 +8,9 @@
     "eslint-config-google": "^0.14.0"
   },
   "scripts": {
-    "provision-bucket": "aws s3 mb s3://rest-to-http-example-bucket --profile home",
-    "deploy-rest": "aws s3api put-object --bucket rest-to-http-example-bucket --key example-openapi-spec.yaml --body ./REST-example-openapi-spec.yaml --profile home && sam build -t REST-template.yaml && sam package --output-template-file REST-packaged.yaml --s3-bucket rest-to-http-example-bucket --profile home && sam deploy --template-file REST-packaged.yaml --stack-name REST-API-Stack --capabilities CAPABILITY_IAM --profile home",
-    "deploy-http": "aws s3api put-object --bucket rest-to-http-example-bucket --key example-openapi-spec.yaml --body ./HTTP-example-openapi-spec.yaml --profile home && sam build -t HTTP-template.yaml && sam package --output-template-file HTTP-packaged.yaml --s3-bucket rest-to-http-example-bucket --profile home && sam deploy --template-file HTTP-packaged.yaml --stack-name HTTP-API-Stack --capabilities CAPABILITY_IAM --profile home"
+    "provision-bucket": "aws s3 mb s3://REPLACEME",
+    "deploy-rest": "aws s3api put-object --bucket REPLACEME --key REST-example-openapi-spec.yaml --body ./REST-example-openapi-spec.yaml && sam build -t REST-template.yaml && sam package --output-template-file REST-packaged.yaml --s3-bucket REPLACEME && sam deploy --template-file REST-packaged.yaml --stack-name REST-API-Stack --capabilities CAPABILITY_IAM",
+    "deploy-http": "aws s3api put-object --bucket REPLACEME --key HTTP-example-openapi-spec.yaml --body ./HTTP-example-openapi-spec.yaml && sam build -t HTTP-template.yaml && sam package --output-template-file HTTP-packaged.yaml --s3-bucket REPLACEME && sam deploy --template-file HTTP-packaged.yaml --stack-name HTTP-API-Stack --capabilities CAPABILITY_IAM"
   },
   "license": "MIT"
 }

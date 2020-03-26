@@ -11,7 +11,7 @@ Parameters:
     Default: rest-item-table
   S3BucketName:
     Type: String
-    Default: rest-to-http-example-bucket
+    Default: REPLACEME
 
 Globals:
   Function:
@@ -25,7 +25,6 @@ Globals:
       AllowOrigin: "'*'"
 
 Resources:
-
   RESTApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -35,7 +34,7 @@ Resources:
         'Fn::Transform':
           Name: AWS::Include
           Parameters:
-            Location: !Join [ '', [ 's3://', !Ref S3BucketName, '/example-openapi-spec.yaml' ] ]
+            Location: !Join [ '', [ 's3://', !Ref S3BucketName, '/REST-example-openapi-spec.yaml' ] ]
 
   AddItemFunction:
     Type: AWS::Serverless::Function

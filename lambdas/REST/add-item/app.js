@@ -14,9 +14,6 @@ exports.lambdaHandler = async (event, context) => {
       body: JSON.stringify({ message: ErrorMessage }),
       headers: { 'Access-Control-Allow-Origin': '*' }
     };
-
-    // New HTTP Lambda v2.0 Response
-    return { message: ErrorMessage };
   }
   else {
     return {
@@ -24,9 +21,6 @@ exports.lambdaHandler = async (event, context) => {
       body: JSON.stringify({ id: id }),
       headers: { 'Access-Control-Allow-Origin': '*' }
     };
-
-    // New HTTP Lambda v2.0 Response
-    return { id: id };
   }
 };
 
