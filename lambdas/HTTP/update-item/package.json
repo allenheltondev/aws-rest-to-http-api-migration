@@ -10,6 +10,6 @@
   },
   "scripts": {},
   "devDependencies": {
-    "aws-sdk": "^2.543.0"
+    "aws-sdk": "^2.814.0"
   }
 }
